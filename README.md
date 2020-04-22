@@ -62,4 +62,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 * Github: [@ClintonEnyinna](https://github.com/https:\/\/github.com\/ClintonEnyinna) 
 
 👤 **Stephen Gamba**
+
+* Twitter: [@bafiam_steve ](https://twitter.com/Bafiam_steve)
 * Github: [@Bafiam](https://github.com/https:\/\/github.com\/bafiam)
