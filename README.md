@@ -8,28 +8,23 @@
   </a>
 </p>
 
-Talknologies
-============
+Library
+=======
 
-This project was built to show mastery with MVC, RESTFUL routes, ActiveRecord, avoiding n+1 queries and deployment. It was built with Ruby and Ruby on Rails using.
+In this project we implemented the use of constructors to initialize new book instances, save them in an array and render them in html. We used local storage for data persitence.
 
-Talknologies is an app where you talk about trending technologies and what you are building with them, you can follow users who interests you so you could see their posts. If you change your mind later, you can unfollow them.
-
-When you create an account, a default picture is assigned to you, you can change it by uploading any image of your choice, this feature was implemented using ActiveStorage and AWS S3. The app automatically resizes the images using imagemagick to fit as a thumbnail or cover image.
+You can add new books to the list of books, delete an individual book or all of them in the library, and update if you have read a book or not.
 
 Features
 --------
-* Login, Logout, Signup
-* Follow and Unfollow users
-* Make new posts
-* See posts of users you follow
-* Update your name and profile picture
+* Add new book to the library
+* Delete one or many books
+* Mark book as read.
 
 ### Prerequisites
 
-- Ruby: 2.6.5
-- Rails: 5.2.4
-- Postgres: >=9.5
+- Javascript
+- Browser
 
 
 ## Live Version
@@ -37,8 +32,6 @@ Features
 
 
 ## Built with
-* [Rails](https://rubyonrails.org/) - Framework 
-* [Ruby](https://www.ruby-lang.org/en/) - Programming language used
 * [VS Code](https://code.visualstudio.com/) - The code editor used
 * [Ubuntu](https://www.linux.org/pages/download/) - Operating System
 
@@ -61,9 +54,12 @@ Any contributions you make are **greatly appreciated**.
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-## Author
+## Contributors
 
 👤 **Clinton Enyinna**
 
 * Twitter: [@enyinnaclinton ](https://twitter.com/ClintonEnyinna)
 * Github: [@ClintonEnyinna](https://github.com/https:\/\/github.com\/ClintonEnyinna) 
+
+👤 **Stephen Gamba**
+* Github: [@Bafiam](https://github.com/https:\/\/github.com\/bafiam)
