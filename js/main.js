@@ -7,50 +7,42 @@ getBookForm.style.display = "None";
 let getUserErr = document.querySelector("#userinputerr");
 let getDeleteBtn = document.querySelector("#book-delete");
 
-
-
-
-const myLibrarydata = JSON.parse(localStorage.getItem('myLibrary'))
+const myLibrarydata = JSON.parse(localStorage.getItem("myLibrary"));
 if (myLibrarydata) {
-  myLibrary = myLibrarydata
-  
+  myLibrary = myLibrarydata;
 }
 
 getBookForm.addEventListener("submit", function (event) {
   event.preventDefault();
-   
-  if (getBookForm.elements[0].value !=  '' && getBookForm.elements[1].value !=  '' && getBookForm.elements[0].value !=  '') {
-    getUserErr.innerHTML = ''
-    
+
+  if (
+    getBookForm.elements[0].value != "" &&
+    getBookForm.elements[1].value != "" &&
+    getBookForm.elements[0].value != ""
+  ) {
+    getUserErr.innerHTML = "";
+
     addBookToLibrary(
       getBookForm.elements[0].value,
       getBookForm.elements[1].value,
       getBookForm.elements[2].value
-      )
-      getUserErr.innerHTML = "Book added";
-      setTimeout(function () {
-        window.location.reload();
-      },2000)
-      
-    
-
-    
-  }else{
-    getUserErr.innerHTML = "All Fields must not be empty"
+    );
+    getUserErr.innerHTML = "Book added";
+    setTimeout(function () {
+      window.location.reload();
+    }, 1000);
+  } else {
+    getUserErr.innerHTML = "All Fields must not be empty";
   }
-  getBookForm.elements[0].value = '';
-  getBookForm.elements[1].value = '';
-  getBookForm.elements[2].value = '';
-  
+  getBookForm.elements[0].value = "";
+  getBookForm.elements[1].value = "";
+  getBookForm.elements[2].value = "";
 });
-
 
 getBookButton.addEventListener("click", function (event) {
   event.preventDefault();
   getBookForm.style.display = "block";
-  
 });
-
 
 function Book(title, author, pages, read = "No") {
   this.title = title;
@@ -66,13 +58,8 @@ function Book(title, author, pages, read = "No") {
 function addBookToLibrary(title, author, pages) {
   let newBook = new Book(title, author, pages);
   myLibrary.push(newBook);
-  localStorage.setItem('myLibrary', JSON.stringify(myLibrary))
-  
-  
+  localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
 }
-
-
-
 
 function render(table, myLibrary) {
   generateTableHead(table, myLibrary);
@@ -82,7 +69,7 @@ function render(table, myLibrary) {
 function generateTableHead(table, myLibrary) {
   if (myLibrary.length < 1) {
     getTableErr.innerHTML = "Database empty";
-  }else{
+  } else {
     let thead = table.createTHead();
     let row = thead.insertRow();
     let data = Object.keys(myLibrary[0]);
@@ -101,59 +88,37 @@ function generateTableHead(table, myLibrary) {
 
 function generateTableContent(table, myLibrary) {
   let tbody = table.createTBody();
-  
+
   for (let element of myLibrary) {
     let row = tbody.insertRow();
-    row.innerHTML = '<input type="checkbox" class="myinput" id="' +getRowId()+'">';
+    row.innerHTML =
+      '<input type="checkbox" class="myinput" id="' + getRowId() + '">';
     for (key in element) {
       let cell = row.insertCell();
       let text = document.createTextNode(element[key]);
       cell.appendChild(text);
     }
-    
   }
-  
-  
 }
-let rowIndex = 0
+
+let rowIndex = 0;
 function getRowId() {
-  rowIndex += 1
-  return rowIndex
+  rowIndex += 1;
+  return rowIndex;
 }
 
 getDeleteBtn.addEventListener("click", function (event) {
-  // event.preventDefault();
-  
-  let getMyInput = document.querySelectorAll(".myinput")
-  let checked = []
+  let getMyInput = document.querySelectorAll(".myinput");
   for (let index = 0; index < getMyInput.length; index++) {
     if (getMyInput[index].checked) {
-      let rowId = getMyInput[index].id
-      let inputRow = checked.push(parseInt(rowId))
-      let toDelete = deleteData(inputRow)
-      console.log(toDelete)
-      for (const key of toDelete) {
-
-        myLibrarydata.splice(myLibrary.indexOf(key),1)
-
-        
-      }
-      
+      let rowId = getMyInput[index].id;
+      delete myLibrary[rowId - 1];
     }
+  }
+  let temp = myLibrary.filter((i) => i);
 
-    
-    
-  }
-  console.log(checked)
-  
+  localStorage.setItem("myLibrary", JSON.stringify(temp));
+  window.location.reload();
 });
-function deleteData(data) {
-  let allData = [];
-  for (let index of data) {
-    allData.push(myLibrary[index-1]) 
-    
-  }
-  return allData
-  
-}
+
 render(table, myLibrary);
