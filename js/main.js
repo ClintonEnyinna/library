@@ -1,28 +1,78 @@
-let myLibrary = [
-  {
-    title: "The Hobbit",
-    author: "J.R.R. Tolkien",
-    pages: "295",
-    read: "no",
-  },
-];
+let myLibrary = [];
 let table = document.querySelector("table");
+let getTableErr = document.querySelector("#tb-err");
+let getBookButton = document.querySelector("#add-book");
+let getBookForm = document.querySelector("#book-form");
+getBookForm.style.display = "None";
+let getUserErr = document.querySelector("#userinputerr");
+let getDeleteBtn = document.querySelector("#book-delete");
 
-function Book(title, author, pages, read) {
+
+
+
+const myLibrarydata = JSON.parse(localStorage.getItem('myLibrary'))
+if (myLibrarydata) {
+  myLibrary = myLibrarydata
+  
+}
+
+getBookForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+   
+  if (getBookForm.elements[0].value !=  '' && getBookForm.elements[1].value !=  '' && getBookForm.elements[0].value !=  '') {
+    getUserErr.innerHTML = ''
+    
+    addBookToLibrary(
+      getBookForm.elements[0].value,
+      getBookForm.elements[1].value,
+      getBookForm.elements[2].value
+      )
+      getUserErr.innerHTML = "Book added";
+      setTimeout(function () {
+        window.location.reload();
+      },2000)
+      
+    
+
+    
+  }else{
+    getUserErr.innerHTML = "All Fields must not be empty"
+  }
+  getBookForm.elements[0].value = '';
+  getBookForm.elements[1].value = '';
+  getBookForm.elements[2].value = '';
+  
+});
+
+
+getBookButton.addEventListener("click", function (event) {
+  event.preventDefault();
+  getBookForm.style.display = "block";
+  
+});
+
+
+function Book(title, author, pages, read = "No") {
   this.title = title;
   this.author = author;
   this.pages = pages;
   this.read = read;
 }
 
-Book.prototype.info = function () {
-  return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read}`;
-};
+// Book.prototype.info = function () {
+//   return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read}`;
+// };
 
-function addBookToLibrary(title, author, pages, read) {
-  let newBook = new Book(title, author, pages, read);
+function addBookToLibrary(title, author, pages) {
+  let newBook = new Book(title, author, pages);
   myLibrary.push(newBook);
+  localStorage.setItem('myLibrary', JSON.stringify(myLibrary))
+  
+  
 }
+
+
+
 
 function render(table, myLibrary) {
   generateTableHead(table, myLibrary);
@@ -30,27 +80,80 @@ function render(table, myLibrary) {
 }
 
 function generateTableHead(table, myLibrary) {
-  let thead = table.createTHead();
-  let row = thead.insertRow();
-  let data = Object.keys(myLibrary[0]);
-  for (let key of data) {
+  if (myLibrary.length < 1) {
+    getTableErr.innerHTML = "Database empty";
+  }else{
+    let thead = table.createTHead();
+    let row = thead.insertRow();
+    let data = Object.keys(myLibrary[0]);
     let th = document.createElement("th");
-    let text = document.createTextNode(key.toUpperCase());
+    let text = document.createTextNode("Operations");
     th.appendChild(text);
     row.appendChild(th);
+    for (let key of data) {
+      let th = document.createElement("th");
+      let text = document.createTextNode(key.toUpperCase());
+      th.appendChild(text);
+      row.appendChild(th);
+    }
   }
 }
 
 function generateTableContent(table, myLibrary) {
   let tbody = table.createTBody();
+  
   for (let element of myLibrary) {
     let row = tbody.insertRow();
+    row.innerHTML = '<input type="checkbox" class="myinput" id="' +getRowId()+'">';
     for (key in element) {
       let cell = row.insertCell();
       let text = document.createTextNode(element[key]);
       cell.appendChild(text);
     }
+    
   }
+  
+  
+}
+let rowIndex = 0
+function getRowId() {
+  rowIndex += 1
+  return rowIndex
 }
 
+getDeleteBtn.addEventListener("click", function (event) {
+  // event.preventDefault();
+  
+  let getMyInput = document.querySelectorAll(".myinput")
+  let checked = []
+  for (let index = 0; index < getMyInput.length; index++) {
+    if (getMyInput[index].checked) {
+      let rowId = getMyInput[index].id
+      let inputRow = checked.push(parseInt(rowId))
+      let toDelete = deleteData(inputRow)
+      console.log(toDelete)
+      for (const key of toDelete) {
+
+        myLibrarydata.splice(myLibrary.indexOf(key),1)
+
+        
+      }
+      
+    }
+
+    
+    
+  }
+  console.log(checked)
+  
+});
+function deleteData(data) {
+  let allData = [];
+  for (let index of data) {
+    allData.push(myLibrary[index-1]) 
+    
+  }
+  return allData
+  
+}
 render(table, myLibrary);
