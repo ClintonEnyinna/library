@@ -52,9 +52,6 @@ function Book(title, author, pages, read = "No") {
   this.read = read;
 }
 
-// Book.prototype.info = function () {
-//   return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read}`;
-// };
 
 function addBookToLibrary(title, author, pages) {
   let newBook = new Book(title, author, pages);
@@ -94,7 +91,7 @@ function generateTableContent(table, myLibrary) {
     let row = tbody.insertRow();
     row.innerHTML =
       '<input type="checkbox" class="myinput" id="' + getRowId() + '">';
-    for (key in element) {
+    for (let key in element) {
       let cell = row.insertCell();
       let text = document.createTextNode(element[key]);
       cell.appendChild(text);
@@ -108,7 +105,7 @@ function getRowId() {
   return rowIndex;
 }
 
-getDeleteBtn.addEventListener("click", function (event) {
+getDeleteBtn.addEventListener("click", function () {
   let getMyInput = document.querySelectorAll(".myinput");
   for (let index = 0; index < getMyInput.length; index++) {
     if (getMyInput[index].checked) {
@@ -122,7 +119,7 @@ getDeleteBtn.addEventListener("click", function (event) {
   window.location.reload();
 });
 
-getEditBtn.addEventListener("click", function (event) {
+getEditBtn.addEventListener("click", function () {
   let getMyInput = document.querySelectorAll(".myinput");
   for (let index = 0; index < getMyInput.length; index++) {
     if (getMyInput[index].checked) {
