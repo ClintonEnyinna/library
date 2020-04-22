@@ -6,10 +6,11 @@ let getBookForm = document.querySelector("#book-form");
 getBookForm.style.display = "None";
 let getUserErr = document.querySelector("#userinputerr");
 let getDeleteBtn = document.querySelector("#book-delete");
+let getEditBtn = document.querySelector("#book-edit");
 
-const myLibrarydata = JSON.parse(localStorage.getItem("myLibrary"));
-if (myLibrarydata) {
-  myLibrary = myLibrarydata;
+const myLibraryData = JSON.parse(localStorage.getItem("myLibrary"));
+if (myLibraryData) {
+  myLibrary = myLibraryData;
 }
 
 getBookForm.addEventListener("submit", function (event) {
@@ -118,6 +119,26 @@ getDeleteBtn.addEventListener("click", function (event) {
   let temp = myLibrary.filter((i) => i);
 
   localStorage.setItem("myLibrary", JSON.stringify(temp));
+  window.location.reload();
+});
+
+getEditBtn.addEventListener("click", function (event) {
+  let getMyInput = document.querySelectorAll(".myinput");
+  for (let index = 0; index < getMyInput.length; index++) {
+    if (getMyInput[index].checked) {
+      let rowId = getMyInput[index].id;
+      if (myLibrary[rowId - 1].read == "Yes") {
+        myLibrary[rowId - 1].read = "No" 
+      }else{
+        myLibrary[rowId - 1].read = "Yes"
+      } 
+
+      
+      
+    }
+  }
+
+  localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
   window.location.reload();
 });
 
