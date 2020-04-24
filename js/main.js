@@ -40,7 +40,7 @@ getBookButton.addEventListener('click', () => {
 });
 
 function generateTableHead() {
-  if (myLibrary.length < 1) {
+  if (myLibrary != null && myLibrary.length < 1) {
     flash('Database empty!', 'danger');
   } else {
     const thead = table.createTHead();
