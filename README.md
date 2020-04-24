@@ -28,7 +28,7 @@ Features
 
 
 ## Live Version
-[Link to app :star2:](https://raw.githack.com/ClintonEnyinna/library/feature/library/index.html)
+[Link to app :star2:](https://rawcdn.githack.com/ClintonEnyinna/library/af6df817a7692f3162445f8ebde58508ae74d614/index.html)
 
 
 ## Built with
