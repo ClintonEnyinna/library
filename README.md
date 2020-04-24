@@ -28,7 +28,7 @@ Features
 
 
 ## Live Version
-[Link to app :star2:](https://mighty-lowlands-57810.herokuapp.com/)
+[Link to app :star2:](https://raw.githack.com/ClintonEnyinna/library/feature/library/index.html)
 
 
 ## Built with
