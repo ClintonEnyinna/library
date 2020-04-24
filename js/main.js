@@ -27,12 +27,12 @@ function clearFields() {
   }
 }
 
-function newBookFlash() {
-  getTableErr.innerHTML = 'New Book added!';
-  getTableErr.className = 'text-success';
+function flash(msg, style) {
+  getTableErr.innerHTML = msg;
+  getTableErr.className = `text-${style}`;
   setTimeout((_) => {
-    getTableErr.innerHTML = '';
-  }, 1000);
+    getTableErr.innerHTML = '&nbsp;';
+  }, 1500);
 }
 
 getBookForm.addEventListener('submit', (event) => {
@@ -52,7 +52,7 @@ getBookForm.addEventListener('submit', (event) => {
     render();
     getBookForm.style.display = 'none';
     getBookButton.style.display = 'block';
-    newBookFlash();
+    flash('New Book Added!', 'success');
     clearFields();
   } else {
     getUserErr.innerHTML = 'Fields must not be empty!';
@@ -66,8 +66,7 @@ getBookButton.addEventListener('click', () => {
 
 function generateTableHead() {
   if (myLibrary.length < 1) {
-    getTableErr.innerHTML = 'Database empty!';
-    getTableErr.className = 'text-danger';
+    flash('Database empty!', 'danger');
   } else {
     const thead = table.createTHead();
     const row = thead.insertRow();
@@ -130,6 +129,7 @@ function deleteRow(e) {
   myLibrary.splice(index - 1, 1);
   localStorage.setItem('myLibrary', JSON.stringify(myLibrary));
   render();
+  flash('Book successfully deleted!', 'success');
 }
 
 function editRow(e) {
@@ -142,6 +142,7 @@ function editRow(e) {
   }
   localStorage.setItem('myLibrary', JSON.stringify(myLibrary));
   render();
+  flash('You changed read status!', 'primary');
 }
 
 function render() {

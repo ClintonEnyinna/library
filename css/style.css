@@ -6,3 +6,7 @@ td:last-of-type{
     width: 30%;
     white-space: nowrap;
 }
+
+.error-msg{
+    height: 20px;
+}
