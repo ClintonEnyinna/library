@@ -5,7 +5,11 @@ const getBookButton = document.querySelector('#add-book');
 const getBookForm = document.querySelector('#book-form');
 const getUserErr = document.querySelector('#userinputerr');
 
-myLibrary = JSON.parse(localStorage.getItem('myLibrary'));
+const myLibraryData = JSON.parse(localStorage.getItem('myLibrary'));
+
+if (myLibraryData) {
+  myLibrary = myLibraryData;
+}
 
 function Book(title, author, pages, read = 'No') {
   this.title = title;
@@ -136,15 +140,15 @@ getBookForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
   if (
-    getBookForm.elements[0].value !== ''
-    && getBookForm.elements[1].value !== ''
-    && getBookForm.elements[2].value !== ''
+    getBookForm.elements[0].value !== '' &&
+    getBookForm.elements[1].value !== '' &&
+    getBookForm.elements[2].value !== ''
   ) {
     getUserErr.innerHTML = '';
     addBookToLibrary(
       getBookForm.elements[0].value,
       getBookForm.elements[1].value,
-      getBookForm.elements[2].value,
+      getBookForm.elements[2].value
     );
     render();
     getBookForm.style.display = 'none';
