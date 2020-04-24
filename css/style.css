@@ -1,0 +1,8 @@
+form{
+    display: none;
+}
+
+td:last-of-type{
+    width: 30%;
+    white-space: nowrap;
+}

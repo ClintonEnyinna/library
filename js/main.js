@@ -3,15 +3,10 @@ const table = document.querySelector('table');
 const getTableErr = document.querySelector('#tb-err');
 const getBookButton = document.querySelector('#add-book');
 const getBookForm = document.querySelector('#book-form');
-getBookForm.style.display = 'None';
 const getUserErr = document.querySelector('#userinputerr');
-const getDeleteBtn = document.querySelector('#book-delete');
 const getEditBtn = document.querySelector('#book-edit');
 
-const myLibraryData = JSON.parse(localStorage.getItem('myLibrary'));
-if (myLibraryData) {
-  myLibrary = myLibraryData;
-}
+myLibrary = JSON.parse(localStorage.getItem('myLibrary'));
 
 function Book(title, author, pages, read = 'No') {
   this.title = title;
@@ -26,69 +21,77 @@ function addBookToLibrary(title, author, pages) {
   localStorage.setItem('myLibrary', JSON.stringify(myLibrary));
 }
 
+function clearFields() {
+  for (let i = 0; i < 3; i += 1) {
+    getBookForm.elements[i].value = '';
+  }
+}
+
+function newBookFlash() {
+  getTableErr.innerHTML = 'New Book added!';
+  getTableErr.className = 'text-success';
+  setTimeout((_) => {
+    getTableErr.innerHTML = '';
+  }, 1000);
+}
+
 getBookForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
   if (
-    getBookForm.elements[0].value !== ''
-    && getBookForm.elements[1].value !== ''
-    && getBookForm.elements[0].value !== ''
+    getBookForm.elements[0].value !== '' &&
+    getBookForm.elements[1].value !== '' &&
+    getBookForm.elements[2].value !== ''
   ) {
     getUserErr.innerHTML = '';
-
     addBookToLibrary(
       getBookForm.elements[0].value,
       getBookForm.elements[1].value,
-      getBookForm.elements[2].value,
+      getBookForm.elements[2].value
     );
-    getUserErr.innerHTML = 'Book added';
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
+    render();
+    getBookForm.style.display = 'none';
+    getBookButton.style.display = 'block';
+    newBookFlash();
+    clearFields();
   } else {
-    getUserErr.innerHTML = 'All Fields must not be empty';
+    getUserErr.innerHTML = 'Fields must not be empty!';
   }
-  getBookForm.elements[0].value = '';
-  getBookForm.elements[1].value = '';
-  getBookForm.elements[2].value = '';
 });
 
 getBookButton.addEventListener('click', () => {
   getBookForm.style.display = 'block';
+  getBookButton.style.display = 'none';
 });
 
 function generateTableHead() {
   if (myLibrary.length < 1) {
-    getTableErr.innerHTML = 'Database empty';
+    getTableErr.innerHTML = 'Database empty!';
+    getTableErr.className = 'text-danger';
   } else {
     const thead = table.createTHead();
     const row = thead.insertRow();
     const data = Object.keys(myLibrary[0]);
-    const thh = document.createElement('th');
-    const headText = document.createTextNode('Operations');
-    thh.appendChild(headText);
-    row.appendChild(thh);
     data.forEach((key) => {
       const th = document.createElement('th');
       const text = document.createTextNode(key.toUpperCase());
       th.appendChild(text);
       row.appendChild(th);
     });
+    const lastTableHeader = document.createElement('th');
+    const action = document.createTextNode('ACTIONS');
+    lastTableHeader.appendChild(action);
+    row.appendChild(lastTableHeader);
+    getTableErr.innerHTML = '';
   }
-}
-
-let rowIndex = 0;
-function getRowId() {
-  rowIndex += 1;
-  return rowIndex;
 }
 
 function generateTableContent() {
   const tbody = table.createTBody();
+  let rowIndex = 0;
 
   myLibrary.forEach((element) => {
     const row = tbody.insertRow();
-    row.innerHTML = `<input type="checkbox" class="myinput" id="${getRowId()}">`;
     Object.keys(element).forEach((key) => {
       if (key) {
         const cell = row.insertCell();
@@ -96,43 +99,61 @@ function generateTableContent() {
         cell.appendChild(text);
       }
     });
+    const cell = row.insertCell();
+
+    const btnDelete = document.createElement('button');
+    const btnEdit = document.createElement('button');
+
+    cell.appendChild(btnEdit);
+    cell.appendChild(btnDelete);
+
+    btnDelete.innerHTML = 'Delete';
+    btnDelete.classList.add('btn', 'btn-danger', 'ml-2');
+    btnDelete.setAttribute('data-delete', `${(rowIndex += 1)}`);
+
+    btnEdit.innerHTML = 'Toggle Read';
+    btnEdit.classList.add('btn', 'btn-warning');
+    btnEdit.setAttribute('data-edit', `${rowIndex}`);
   });
 }
 
-function render() {
-  generateTableHead(table, myLibrary);
-  generateTableContent(table, myLibrary);
+function addClickEventToBtn(getDeleteBtns, action) {
+  [...getDeleteBtns].forEach((btn) => {
+    if (action === 'delete') btn.addEventListener('click', deleteRow);
+    else btn.addEventListener('click', editRow);
+  });
 }
 
-getDeleteBtn.addEventListener('click', () => {
-  const getMyInput = document.querySelectorAll('.myinput');
-  for (let index = 0; index < getMyInput.length; index += 1) {
-    if (getMyInput[index].checked) {
-      const rowId = getMyInput[index].id;
-      delete myLibrary[rowId - 1];
-    }
-  }
-  const temp = myLibrary.filter((i) => i);
+function deleteRow(e) {
+  let index = e.target.getAttribute('data-delete');
 
-  localStorage.setItem('myLibrary', JSON.stringify(temp));
-  window.location.reload();
-});
-
-getEditBtn.addEventListener('click', () => {
-  const getMyInput = document.querySelectorAll('.myinput');
-  for (let index = 0; index < getMyInput.length; index += 1) {
-    if (getMyInput[index].checked) {
-      const rowId = getMyInput[index].id;
-      if (myLibrary[rowId - 1].read === 'Yes') {
-        myLibrary[rowId - 1].read = 'No';
-      } else {
-        myLibrary[rowId - 1].read = 'Yes';
-      }
-    }
-  }
-
+  myLibrary.splice(index - 1, 1);
   localStorage.setItem('myLibrary', JSON.stringify(myLibrary));
-  window.location.reload();
-});
+  render();
+}
+
+function editRow(e) {
+  let index = e.target.getAttribute('data-edit');
+
+  if (myLibrary[index - 1].read === 'Yes') {
+    myLibrary[index - 1].read = 'No';
+  } else {
+    myLibrary[index - 1].read = 'Yes';
+  }
+  localStorage.setItem('myLibrary', JSON.stringify(myLibrary));
+  render();
+}
+
+function render() {
+  table.innerHTML = '';
+  generateTableHead(table, myLibrary);
+  generateTableContent(table, myLibrary);
+
+  let getDeleteBtns = document.querySelectorAll('[data-delete]');
+  let getEditBtns = document.querySelectorAll('[data-edit]');
+
+  addClickEventToBtn(getDeleteBtns, 'delete');
+  addClickEventToBtn(getEditBtns, 'edit');
+}
 
 render(table, myLibrary);
