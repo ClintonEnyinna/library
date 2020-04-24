@@ -136,15 +136,15 @@ getBookForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
   if (
-    getBookForm.elements[0].value !== '' &&
-    getBookForm.elements[1].value !== '' &&
-    getBookForm.elements[2].value !== ''
+    getBookForm.elements[0].value !== ''
+    && getBookForm.elements[1].value !== ''
+    && getBookForm.elements[2].value !== ''
   ) {
     getUserErr.innerHTML = '';
     addBookToLibrary(
       getBookForm.elements[0].value,
       getBookForm.elements[1].value,
-      getBookForm.elements[2].value
+      getBookForm.elements[2].value,
     );
     render();
     getBookForm.style.display = 'none';
