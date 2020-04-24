@@ -4,7 +4,6 @@ const getTableErr = document.querySelector('#tb-err');
 const getBookButton = document.querySelector('#add-book');
 const getBookForm = document.querySelector('#book-form');
 const getUserErr = document.querySelector('#userinputerr');
-const getEditBtn = document.querySelector('#book-edit');
 
 myLibrary = JSON.parse(localStorage.getItem('myLibrary'));
 
@@ -22,7 +21,7 @@ function addBookToLibrary(title, author, pages) {
 }
 
 function clearFields() {
-  for (let i = 0; i < 3; i += 1) {
+  for (let i = 0; i < getBookForm.length - 1; i += 1) {
     getBookForm.elements[i].value = '';
   }
 }
@@ -30,34 +29,10 @@ function clearFields() {
 function flash(msg, style) {
   getTableErr.innerHTML = msg;
   getTableErr.className = `text-${style}`;
-  setTimeout((_) => {
+  setTimeout(() => {
     getTableErr.innerHTML = '&nbsp;';
   }, 1500);
 }
-
-getBookForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-
-  if (
-    getBookForm.elements[0].value !== '' &&
-    getBookForm.elements[1].value !== '' &&
-    getBookForm.elements[2].value !== ''
-  ) {
-    getUserErr.innerHTML = '';
-    addBookToLibrary(
-      getBookForm.elements[0].value,
-      getBookForm.elements[1].value,
-      getBookForm.elements[2].value
-    );
-    render();
-    getBookForm.style.display = 'none';
-    getBookButton.style.display = 'block';
-    flash('New Book Added!', 'success');
-    clearFields();
-  } else {
-    getUserErr.innerHTML = 'Fields must not be empty!';
-  }
-});
 
 getBookButton.addEventListener('click', () => {
   getBookForm.style.display = 'block';
@@ -116,45 +91,69 @@ function generateTableContent() {
   });
 }
 
-function addClickEventToBtn(getDeleteBtns, action) {
-  [...getDeleteBtns].forEach((btn) => {
-    if (action === 'delete') btn.addEventListener('click', deleteRow);
-    else btn.addEventListener('click', editRow);
-  });
-}
-
-function deleteRow(e) {
-  let index = e.target.getAttribute('data-delete');
-
-  myLibrary.splice(index - 1, 1);
-  localStorage.setItem('myLibrary', JSON.stringify(myLibrary));
-  render();
-  flash('Book successfully deleted!', 'success');
-}
-
-function editRow(e) {
-  let index = e.target.getAttribute('data-edit');
-
-  if (myLibrary[index - 1].read === 'Yes') {
-    myLibrary[index - 1].read = 'No';
-  } else {
-    myLibrary[index - 1].read = 'Yes';
-  }
-  localStorage.setItem('myLibrary', JSON.stringify(myLibrary));
-  render();
-  flash('You changed read status!', 'primary');
-}
-
 function render() {
   table.innerHTML = '';
   generateTableHead(table, myLibrary);
   generateTableContent(table, myLibrary);
 
-  let getDeleteBtns = document.querySelectorAll('[data-delete]');
-  let getEditBtns = document.querySelectorAll('[data-edit]');
+  const getDeleteBtns = document.querySelectorAll('[data-delete]');
+  const getEditBtns = document.querySelectorAll('[data-edit]');
+
+  function deleteRow(e) {
+    const index = e.target.getAttribute('data-delete');
+
+    myLibrary.splice(index - 1, 1);
+    localStorage.setItem('myLibrary', JSON.stringify(myLibrary));
+    render();
+    flash('Book successfully deleted!', 'success');
+  }
+
+  function editRow(e) {
+    const index = e.target.getAttribute('data-edit');
+
+    if (myLibrary[index - 1].read === 'Yes') {
+      myLibrary[index - 1].read = 'No';
+    } else {
+      myLibrary[index - 1].read = 'Yes';
+    }
+    localStorage.setItem('myLibrary', JSON.stringify(myLibrary));
+    render();
+    flash('You changed read status!', 'primary');
+  }
+
+  function addClickEventToBtn(getBtns, action) {
+    [...getBtns].forEach((btn) => {
+      if (action === 'delete') btn.addEventListener('click', deleteRow);
+      else btn.addEventListener('click', editRow);
+    });
+  }
 
   addClickEventToBtn(getDeleteBtns, 'delete');
   addClickEventToBtn(getEditBtns, 'edit');
 }
+
+getBookForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  if (
+    getBookForm.elements[0].value !== '' &&
+    getBookForm.elements[1].value !== '' &&
+    getBookForm.elements[2].value !== ''
+  ) {
+    getUserErr.innerHTML = '';
+    addBookToLibrary(
+      getBookForm.elements[0].value,
+      getBookForm.elements[1].value,
+      getBookForm.elements[2].value
+    );
+    render();
+    getBookForm.style.display = 'none';
+    getBookButton.style.display = 'block';
+    flash('New Book Added!', 'success');
+    clearFields();
+  } else {
+    getUserErr.innerHTML = 'Fields must not be empty!';
+  }
+});
 
 render(table, myLibrary);
